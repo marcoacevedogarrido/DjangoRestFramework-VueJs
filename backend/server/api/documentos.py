@@ -6,11 +6,7 @@ class DocumentoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Documento
-        fields = ['cliente',
-                  'nombre',
-                  'fecha_creacion',
-                  'fecha_envio'
-                  ]
+        fields = '__all__'
 
 
 class DocumentoView(viewsets.ModelViewSet):

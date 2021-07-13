@@ -40,8 +40,8 @@ class Documento(models.Model):
 
 class Proceso(models.Model):
     cliente = models.OneToOneField('server.Cliente', on_delete=models.CASCADE, null=False, blank=True)
-    documento = models.ForeignKey('server.Documento', on_delete=models.CASCADE, null=False, blank=True)
-    producto = models.ForeignKey('server.Producto', on_delete=models.CASCADE, null=False, blank=True)
+    documento = models.ForeignKey('server.Documento', on_delete=models.CASCADE, default=True)
+    producto = models.ForeignKey('server.Producto', on_delete=models.CASCADE, default=True)
     cantidad = models.FloatField(null=True, blank=True)
 
     class Meta:

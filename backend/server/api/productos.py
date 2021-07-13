@@ -6,10 +6,7 @@ class ProductoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Producto
-        fields = ['nombre',
-                  'codigo',
-                  'precio'
-                  ]
+        fields = '__all__'
 
 
 class ProductoView(viewsets.ModelViewSet):
