@@ -1,10 +1,14 @@
+
 from django.urls import path
-from rest_framework import routers
-from authentication.api.usuario import UserViewSet
+from rest_framework.urlpatterns import format_suffix_patterns
+from authentication.api.usuario import  LoginView, LogoutView, RegisterView
 
-router = routers.SimpleRouter()
+urlpatterns = [
+    path('api/login', LoginView.as_view()),
+    path('api/logout', LogoutView.as_view()),
+    path('api/register', RegisterView.as_view())
 
-router.register(r'api/usuarios', UserViewSet, 'usuarios')
 
-urlpatterns = []
-urlpatterns += router.urls
+]
+
+urlpatterns = format_suffix_patterns(urlpatterns)

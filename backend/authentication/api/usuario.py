@@ -1,29 +1,39 @@
 from django.contrib.auth import password_validation, authenticate
-from rest_framework import serializers
-from rest_framework.authtoken.models import Token
-from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from rest_framework import status, viewsets, permissions
+from rest_framework.validators import UniqueValidator
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from rest_framework import serializers
 from django.contrib.auth import logout
-from django.core.validators import RegexValidator, FileExtensionValidator
-from rest_framework.validators import UniqueValidator
-
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
+from rest_framework.views import APIView
+
 
 class UserModelSerializer(serializers.ModelSerializer):
+    username = serializers.CharField()
+    password = serializers.CharField(min_length=3)
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email')
-        extra_kwargs = {'username': {'read_only': True},'first_name': {'read_only': True},'last_name': {'read_only': True},'email': {'read_only': True}}
+        fields = ('username', 'password')
+        extra_kwargs = {'password': {'write_only': True}}
 
 
-class UserLoginSerializer(serializers.Serializer):
+
+class UserLoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
-    password = serializers.CharField(min_length=8)
+    password = serializers.CharField(min_length=3, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'password')
+        extra_kwargs = {'password': {'write_only': True}}
+
+
 
     def validate(self, data):
         user = authenticate(username=data['username'], password=data['password'])
@@ -60,12 +70,11 @@ class UserSignUpSerializer(serializers.Serializer):
         return user
 
 
-class UserViewSet(viewsets.GenericViewSet):
-    queryset = User.objects.filter(is_active=True)
+class LoginView(APIView):
     serializer_class = UserModelSerializer
+    permission_classes = (permissions.AllowAny,)
 
-    @action(detail=False, methods=['post'])
-    def login(self, request):
+    def post(self, request, *args, **kwargs):
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user, token = serializer.save()
@@ -76,21 +85,24 @@ class UserViewSet(viewsets.GenericViewSet):
         return Response(data, status=status.HTTP_201_CREATED)
 
 
-    @action(detail=False, methods=['post'])
-    def signup(self, request):
+class LogoutView(APIView):
+
+    def post(self, request):
+        try:
+            request.user.auth_token.delete()
+        except (AttributeError, ObjectDoesNotExist):
+            pass
+        logout(request)
+        data = {'success': 'logged out'}
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+class RegisterView(APIView):
+    serializer_class = UserSignUpSerializer
+
+    def post(self, request):
         serializer = UserSignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         data = UserModelSerializer(user).data
         return Response(data, status=status.HTTP_201_CREATED)
-
-    @action(detail=False, methods=['post'])
-    def logout(self, request):
-        try:
-            request.user.auth_token.delete()
-        except (AttributeError, ObjectDoesNotExist):
-            pass
-
-        logout(request)
-        data = {'success': 'Sucessfully logged out'}
-        return Response(data=data, status=status.HTTP_200_OK)
