@@ -2,15 +2,16 @@ from django.contrib.auth import password_validation, authenticate
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 from django.core.validators import RegexValidator, FileExtensionValidator
 from rest_framework.validators import UniqueValidator
 
-
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework import status
 
 class UserModelSerializer(serializers.ModelSerializer):
 
@@ -82,3 +83,14 @@ class UserViewSet(viewsets.GenericViewSet):
         user = serializer.save()
         data = UserModelSerializer(user).data
         return Response(data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['post'])
+    def logout(self, request):
+        try:
+            request.user.auth_token.delete()
+        except (AttributeError, ObjectDoesNotExist):
+            pass
+
+        logout(request)
+        data = {'success': 'Sucessfully logged out'}
+        return Response(data=data, status=status.HTTP_200_OK)
