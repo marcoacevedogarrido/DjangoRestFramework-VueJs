@@ -11,15 +11,17 @@ from rest_framework import serializers
 from django.contrib.auth import logout
 from rest_framework import status
 from rest_framework.views import APIView
+from server.models import Proceso
 
 
 class UserModelSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
     password = serializers.CharField(min_length=3)
+    procesos = serializers.PrimaryKeyRelatedField(many=True, queryset=Proceso.objects.all())
 
     class Meta:
         model = User
-        fields = ('username', 'password')
+        fields = ('username', 'password', 'procesos')
         extra_kwargs = {'password': {'write_only': True}}
 
 

@@ -39,6 +39,7 @@ class Documento(models.Model):
 
 
 class Proceso(models.Model):
+    proceso = models.ForeignKey('auth.User', related_name='procesos', on_delete=models.CASCADE, default=True)
     cliente = models.OneToOneField('server.Cliente', on_delete=models.CASCADE, null=False, blank=True)
     documento = models.ForeignKey('server.Documento', on_delete=models.CASCADE, default=True)
     producto = models.ForeignKey('server.Producto', on_delete=models.CASCADE, default=True)
@@ -47,5 +48,5 @@ class Proceso(models.Model):
     class Meta:
         ordering = ['id']
 
-    def __str__(self):
+    def __int__(self):
         return int(self.id)
