@@ -12,3 +12,4 @@ class ProductoSerializer(serializers.ModelSerializer):
 class ProductoView(viewsets.ModelViewSet):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
+    permission_classes = [IsAuthenticated]

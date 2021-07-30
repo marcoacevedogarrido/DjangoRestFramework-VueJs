@@ -29,3 +29,4 @@ class SorteoSerializer(serializers.ModelSerializer):
 class SorteoView(viewsets.ModelViewSet):
     queryset = Proceso.objects.all()
     serializer_class = SorteoSerializer
+    permission_classes = [IsAuthenticated]

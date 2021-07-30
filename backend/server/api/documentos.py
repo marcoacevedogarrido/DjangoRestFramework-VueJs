@@ -12,3 +12,4 @@ class DocumentoSerializer(serializers.ModelSerializer):
 class DocumentoView(viewsets.ModelViewSet):
     queryset = Documento.objects.all()
     serializer_class = DocumentoSerializer
+    permission_classes = [IsAuthenticated]
