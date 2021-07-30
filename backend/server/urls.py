@@ -5,7 +5,10 @@ from server.api.procesos import ProcesoView
 from server.api.productos import ProductoView
 from server.api.documentos import DocumentoView
 from server.api.sorteos import SorteoView
+from rest_framework.urlpatterns import format_suffix_patterns
 
+from django.conf.urls import include, url
+from server.api.pandas import PandasView
 
 router = routers.SimpleRouter()
 
@@ -16,6 +19,5 @@ router.register(r'api/documentos', DocumentoView, 'documentos'),
 router.register(r'api/sorteos', SorteoView, 'sorteos')
 
 
-
-urlpatterns = []
+urlpatterns = [ url(r'^data', PandasView.as_view()), ]
 urlpatterns += router.urls

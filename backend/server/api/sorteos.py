@@ -18,7 +18,7 @@ class SorteoSerializer(serializers.ModelSerializer):
 
     def get_total(self, obj):
         precio = Proceso.objects.values('proceso').aggregate(monto_total=Sum('producto__precio'))['monto_total']
-        return precio
+        return precion
 
     def get_total_bruto(self, obj):
         cantidad = int(obj.cantidad)
@@ -26,22 +26,6 @@ class SorteoSerializer(serializers.ModelSerializer):
         return cantidad * precio
 
 
-      # def get_precio_total_linea(self, obj):
-      #   cantidad = int(obj.cantidad)
-      #   precio = int(obj.precio)
-      #   return cantidad * precio
-      #
-
 class SorteoView(viewsets.ModelViewSet):
     queryset = Proceso.objects.all()
     serializer_class = SorteoSerializer
-# class SorteoView(APIView):
-#
-#     def get(self, request, format=None):
-#         serializer = SorteoSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         data = {
-#             'sorteo': SorteoSerializer(Cliente.id).data,
-#
-#         }
-#         return Response(data, status=status.HTTP_200_OK)
