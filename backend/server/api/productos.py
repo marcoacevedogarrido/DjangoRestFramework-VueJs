@@ -1,6 +1,7 @@
 from rest_framework import serializers, viewsets
 from server.models import Producto
 from rest_framework import views
+from rest_framework.permissions import IsAuthenticated
 
 class ProductoSerializer(serializers.ModelSerializer):
 

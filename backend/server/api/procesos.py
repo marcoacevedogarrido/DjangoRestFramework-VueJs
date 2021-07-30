@@ -4,7 +4,7 @@ from server.api.documentos import DocumentoSerializer
 from server.api.clientes import ClienteSerializer
 from server.api.productos import ProductoSerializer
 from rest_framework import views
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 class ProcesoSerializer(serializers.ModelSerializer):

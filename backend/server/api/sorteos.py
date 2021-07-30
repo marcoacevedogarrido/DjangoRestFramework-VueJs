@@ -6,6 +6,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework import generics
 from rest_framework import status
 from django.db.models import Sum, Count
+from rest_framework.permissions import IsAuthenticated
 
 
 class SorteoSerializer(serializers.ModelSerializer):
