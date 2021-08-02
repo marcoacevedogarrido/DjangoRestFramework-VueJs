@@ -1,5 +1,7 @@
 """env\Scripts\activate"""
 import os
+from corsheaders.defaults import default_headers
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -16,6 +18,20 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ORIGIN_ALLOW = True
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+ALLOWED_HOSTS_ORIGIN_WHITELIST = (
+    'localhost:8080',
+    'localhost'
+)
+
+SITE_ID = 2
+
+CORS_ALLOW_HEADERS = default_headers + (
+    'contenttype',
+)
 
 # Application definition
 
@@ -30,15 +46,16 @@ INSTALLED_APPS = [
     'authentication',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_auth'
-    ]
+    'rest_auth',
+    'corsheaders'
+]
 
 
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ]
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated',
+#     ]
+# }
 
 
 MIDDLEWARE = [
@@ -49,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'conf.urls'

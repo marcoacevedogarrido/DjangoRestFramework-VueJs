@@ -6,7 +6,7 @@ from authentication.api.usuario import RegisterView
 urlpatterns = [
     # path('api/login', LoginView.as_view()),
     # path('api/logout', LogoutView.as_view()),
-    path('api/register', RegisterView.as_view()),
+    path('api/registro', RegisterView.as_view()),
 
 ]
 
