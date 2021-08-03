@@ -50,7 +50,7 @@ export default {
         username: this.username,
         password: this.password
       }).then(() => {
-          this.$router.push({ name: '7' })
+          this.$router.push({ name: 'ListaCliente' })
         }).catch(e => {
           Toast.fire({
             icon: 'error',

@@ -68,11 +68,11 @@
                                 <th>id</th>
                                 <th>Nombre</th>
                                 <th>Razon Social</th>
-                                <th>rut</th>
+                                <th>Rut</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(item, x) in lineas" v-bind:key="x">
+                            <tr v-for="(item, x) in clientes" v-bind:key="x">
                                 <td>
                                   <span v-if="!item.editando">
                                     {{ item.producto_obj.nombre }}
