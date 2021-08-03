@@ -45,7 +45,7 @@ class Documento(models.Model):
 class Proceso(models.Model):
     proceso = models.ForeignKey('auth.User', related_name='procesos', on_delete=models.CASCADE, default=True)
     cliente = models.OneToOneField('server.Cliente', on_delete=models.CASCADE, null=False, blank=True)
-    documento = models.ForeignKey('server.Documento', on_delete=models.CASCADE, default=True)
+    documento = models.OneToOneField('server.Documento', on_delete=models.CASCADE, null=False, blank=True)
     producto = models.ForeignKey('server.Producto', on_delete=models.CASCADE, default=True)
     cantidad = models.FloatField(null=False, blank=True)
 

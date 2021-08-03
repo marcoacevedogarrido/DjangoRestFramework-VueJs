@@ -1,6 +1,5 @@
 <template>
   <div class="edit">
-    <NavBar></NavBar>
       <div class="container">
         <div class="row">
           <div class="col-md-12 text-left">
@@ -12,15 +11,6 @@
           <form>
             <b-container>
               <div class="detalle">
-                <div class="form-group row text-left">
-                  <label
-                    for="id"
-                    class="col-sm-6 col-form-label">
-                    <strong>
-                      Id
-                    </strong> : {{ item.id }}
-                  </label>
-                </div>
                 <div class="form-group row text-left">
                   <label
                     for="nombre"
@@ -45,14 +35,14 @@
                     class="col-sm-6 col-form-label">
                     <strong>
                       Rut
-                    </strong> : $ {{ item.rut }}
+                    </strong> : {{ item.rut }}
                   </label>
                 </div>
               </div>
               <div class="botonenvio text-right">
                 <template>
                   <b-button
-                  v-if='!item.fecha_envio'
+                  v-if='!item.razon_social'
                   size='sm'
                   variant="primary"
                   :to="{ name:'' }">
@@ -65,43 +55,43 @@
                     <table class="table table-striped table-bordered table-hover text-center">
                         <thead class="thead-dark">
                             <tr>
-                                <th>id</th>
                                 <th>Nombre</th>
                                 <th>Razon Social</th>
                                 <th>Rut</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(item, x) in clientes" v-bind:key="x">
                                 <td>
                                   <span v-if="!item.editando">
-                                    {{ item.producto_obj.nombre }}
+                                    {{ item.nombre }}
                                   </span>
                                   <span v-if="item.editando">
                                     <b-form-input
-                                    v-model="item.producto_obj.nombre"
+                                    v-model="nombre"
                                     size="sm">
                                     </b-form-input>
                                   </span>
                                 </td>
                                 <td>
                                   <span v-if="!item.editando">
-                                    {{ item.cantidad }}
+                                    {{ item.razon_social }}
                                   </span>
                                   <span v-if="item.editando">
                                     <b-form-input
-                                    v-model="item.cantidad"
+                                    v-model="razon_social"
                                     size="sm">
                                     </b-form-input>
                                   </span>
                                 </td>
                                 <td>
                                   <span v-if='!item.editando'>
-                                   {{ formato_totales(item.producto_obj.precio) }}
+                                   {{ item.rut }}
                                   </span>
                                   <span v-if='item.editando'>
                                     <b-form-input
-                                    v-model='item.producto_obj.precio'
+                                    v-model="rut"
                                     size="sm">
                                     </b-form-input>
                                   </span>
@@ -135,16 +125,6 @@
                     </table>
                 </div>
               </div>
-              <div class="total" v-if='item.lineas'>
-                <div class="form-group row text-right">
-                  <label class="col-sm-11 col-form-label">
-                    <strong>
-                      Total
-                    </strong> : $ {{ formato_totales(item.lineas[0].precio_total_linea) }}
-                  </label>
-                </div>
-              </div>
-
               <div class="rows">
                 <div class="text-left">
                     <!--<b-button v-on:click='DeleteDocumento' size='sm'  variant="danger">
@@ -153,7 +133,7 @@
                     <b-button
                       size='sm'
                       variant="primary"
-                      :to="{ name:'ListarDocumento' }">
+                      :to="{ name:'ListaCliente'}">
                       Volver
                     </b-button>
                 </div>
@@ -189,8 +169,8 @@ export default {
     return {
       clienteId: this.$route.params.clienteId,
       item: {
+         nombre: '',
          razon_social: '',
-         fecha_creacion: '',
          rut: ''
       },
       clientes: []
@@ -225,28 +205,13 @@ export default {
       })
     },
     getLinea () {
-      const getclientepath = `http://localhost:8000/api/lineas/?cliente=${this.ClienteId}`
+      const getclientepath = `http://localhost:8000/api/clientes/?clientes=${this.clienteId}`
       axios.get(getclientepath).then((response) => {
         this.clientes = response.data
       })
       .catch((error) => {
         console.log(error)
       })
-    },
-    formato_totales (cantidad, decimales) {
-    cantidad += ''
-    cantidad = parseFloat(cantidad.replace(/[^0-9.]/g, ''))
-    decimales = decimales || 0
-    if (isNaN(cantidad) || cantidad === 0) {
-        return parseFloat(0).toFixed(decimales)
-      }
-      cantidad = '' + cantidad.toFixed(decimales)
-    var cantidadpartes = cantidad.split('.')
-    var regexp = /(\d+)(\d{3})/
-    while (regexp.test(cantidadpartes[0])) {
-      cantidadpartes[0] = cantidadpartes[0].replace(regexp, '$1' + ',' + '$2')
-      }
-      return cantidadpartes.join('.')
     }
   },
   created () {
@@ -260,6 +225,27 @@ export default {
 .detalle {
   margin-bottom: 3%;
 }
+table {
+  background-color: #fff;
+}
+th {
+  background-color: #1E376D;
+  color: rgba(255,255,255,0.66);
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.table td {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+.table-bordered th, .table-bordered td {
+  border-color: #F3F3F3;
+}
+
 .table {
   margin-bottom: 2%;
 }
@@ -276,13 +262,7 @@ export default {
   padding-top: 1%;
   padding-bottom: 1%;
 }
-.table td {
-  padding-top: 8px !important;
-  padding-bottom: 8px !important;
-}
-.table-bordered th, .table-bordered td {
-  border-color: #F3F3F3;
-}
+
 .col-md-12 h4 {
   padding-top: 3% !important;
   padding-bottom: 3% !important;

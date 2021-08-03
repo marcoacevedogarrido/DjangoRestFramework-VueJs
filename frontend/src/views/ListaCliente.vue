@@ -19,7 +19,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(item, x) in paginated('clientes')" v-bind:key="x">
+                      <tr v-for="(item, x) in clientes" v-bind:key="x">
                         <td>
                           <router-link :to="{path: item.id.toString()}">
                             {{ item.id }}
@@ -53,6 +53,7 @@
 import axios from 'axios'
 
 const Listarpath = 'http://localhost:8000/api/clientes/'
+
 export default {
   components: {},
   data () {
@@ -83,7 +84,6 @@ export default {
 
 <style lang='css' scoped>
 table {
-  border: 2px solid #1E376D;
   background-color: #fff;
 }
 
