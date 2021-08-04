@@ -1,16 +1,17 @@
 from rest_framework import serializers, viewsets
 from server.models import Documento
 from rest_framework import views
-from rest_framework.permissions import IsAuthenticated
+from server.api.clientes import ClienteSerializer
+
 
 class DocumentoSerializer(serializers.ModelSerializer):
+    cliente_obj = ClienteSerializer(source='cliente')
 
     class Meta:
         model = Documento
-        fields = '__all__'
+        fields = ['id', 'nombre', 'fecha_creacion', 'fecha_envio', 'cliente_obj']
 
 
 class DocumentoView(viewsets.ModelViewSet):
     queryset = Documento.objects.all()
     serializer_class = DocumentoSerializer
-    permission_classes = [IsAuthenticated]

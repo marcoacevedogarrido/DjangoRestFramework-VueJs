@@ -4,7 +4,6 @@ from server.api.documentos import DocumentoSerializer
 from server.api.clientes import ClienteSerializer
 from server.api.productos import ProductoSerializer
 from rest_framework import views
-# from rest_framework.permissions import IsAuthenticated
 
 
 class ProcesoSerializer(serializers.ModelSerializer):
@@ -23,4 +22,3 @@ class ProcesoSerializer(serializers.ModelSerializer):
 class ProcesoView(viewsets.ModelViewSet):
     queryset = Proceso.objects.all()
     serializer_class = ProcesoSerializer
-    # permission_classes = [IsAuthenticated]
