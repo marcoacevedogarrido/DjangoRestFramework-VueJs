@@ -7,14 +7,13 @@ from rest_framework import views
 
 
 class ProcesoSerializer(serializers.ModelSerializer):
-    documento_obj = DocumentoSerializer(source='documento', read_only=True)
-    cliente_obj = ClienteSerializer(source='cliente')
+    documento_obj = DocumentoSerializer(source='documento')
     producto_obj = ProductoSerializer(source='producto')
-    # owner = serializers.ReadOnlyField(source='owner.username')
+    owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = Proceso
-        fields = ['id', 'cantidad', 'documento_obj', 'cliente_obj', 'producto_obj']
+        fields = ['id', 'cantidad', 'documento_obj', 'producto_obj', 'owner']
 
     def create(self, validated_data):
         return Proceso.objects.create(**validated_data)

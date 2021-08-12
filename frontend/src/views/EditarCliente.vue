@@ -3,95 +3,56 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12 text-left">
-            <h4>Detalle de Cliente</h4>
+            <h4>Detalle de Documento</h4>
           </div>
         </div>
       <div class="row">
         <div class="col">
           <form>
             <b-container>
-              <div class="detalle">
-                <div class="form-group row text-left">
-                  <label
-                    for="nombre"
-                    class="col-sm-6 col-form-label">
-                    <strong>
-                      Nombre
-                    </strong> : {{ item.nombre }}
-                  </label>
-                </div>
-                <div class="form-group row text-left">
-                  <label
-                    for="razon_social"
-                    class="col-sm-6 col-form-label">
-                    <strong>
-                      Razon social
-                    </strong> : {{ item.razon_social }}
-                  </label>
-                </div>
-                <div class="form-group row text-left">
-                  <label
-                    for="rut"
-                    class="col-sm-6 col-form-label">
-                    <strong>
-                      Rut
-                    </strong> : {{ item.rut }}
-                  </label>
-                </div>
-              </div>
-              <div class="botonenvio text-right">
-                <template>
-                  <b-button
-                  v-if='!item.razon_social'
-                  size='sm'
-                  variant="primary"
-                  :to="{ name:'' }">
-                    Enviar Documento
-                  </b-button>
-                </template>
-              </div>
+
               <div class="container">
                 <div class="row justify-content-center align-items-center">
                     <table class="table table-striped table-bordered table-hover text-center">
                         <thead class="thead-dark">
                             <tr>
                                 <th>Nombre</th>
-                                <th>Razon Social</th>
-                                <th>Rut</th>
-                                <th></th>
+                                <th>Codigo</th>
+                                <th>Precio</th>
+                                <th>{{ }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(item, x) in clientes" v-bind:key="x">
+                            <tr v-for="(item, x) in procesos" v-bind:key="x">
                                 <td>
                                   <span v-if="!item.editando">
-                                    {{ item.nombre }}
+                                    {{ item.producto_obj.nombre }}
                                   </span>
                                   <span v-if="item.editando">
                                     <b-form-input
-                                    v-model="nombre"
+                                    v-model="item.producto_obj.nombre"
                                     size="sm">
                                     </b-form-input>
                                   </span>
                                 </td>
                                 <td>
                                   <span v-if="!item.editando">
-                                    {{ item.razon_social }}
+                                    {{ item.producto_obj.codigo }}
                                   </span>
                                   <span v-if="item.editando">
                                     <b-form-input
-                                    v-model="razon_social"
+                                    v-model="tem.producto_obj.codigo"
                                     size="sm">
                                     </b-form-input>
                                   </span>
                                 </td>
                                 <td>
                                   <span v-if='!item.editando'>
-                                   {{ item.rut }}
+                                   {{ item.producto_obj.precio }}
                                   </span>
                                   <span v-if='item.editando'>
                                     <b-form-input
-                                    v-model="rut"
+                                    v-model="item.producto_obj.precio"
                                     size="sm">
                                     </b-form-input>
                                   </span>
@@ -161,23 +122,26 @@ const Toast = Swal.mixin({
   }
 })
 /* eslint-disable */
-const Getdocpath = 'http://localhost:8000/api/clientes/?clientes=${this.clienteId}/'
-const Savepath = 'http://localhost:8000/api/clientes/?cliente=${this.clienteId}/'
+
+const Savepath = 'http://localhost:8000/api/documentos/?documento=${this.documentoId}/'
+
 export default {
   components: {},
   data () {
     return {
-      clienteId: this.$route.params.clienteId,
+      documentoId: this.$route.params.documentoId,
       item: {
+         producto_obj: '',
          nombre: '',
-         razon_social: '',
-         rut: ''
+         fecha_creacion: '',
+         fecha_envio: ''
       },
-      clientes: []
+      procesos: []
     }
   },
   methods: {
     getCliente () {
+      const Getdocpath = `http://localhost:8000/api/documentos/?documentos=${this.documentoId}/`
       axios.get(Getdocpath).then((response) => {
         this.item = response.data
       })
@@ -204,10 +168,10 @@ export default {
         console.log(error)
       })
     },
-    getLinea () {
-      const getclientepath = `http://localhost:8000/api/clientes/?clientes=${this.clienteId}`
-      axios.get(getclientepath).then((response) => {
-        this.clientes = response.data
+    getProceso () {
+      const getprocesopath = `http://localhost:8000/api/procesos/?documento=${this.documentoId}`
+      axios.get(getprocesopath).then((response) => {
+        this.procesos = response.data
       })
       .catch((error) => {
         console.log(error)
@@ -216,7 +180,7 @@ export default {
   },
   created () {
     this.getCliente()
-    this.getLinea()
+    this.getProceso()
   }
 }
 </script>

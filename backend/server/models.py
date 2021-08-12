@@ -1,5 +1,6 @@
 from django.db import models
 from django_pandas.managers import DataFrameManager
+from django.contrib.auth.models import User
 
 
 class Pandas(models.Model):
@@ -15,6 +16,24 @@ class Cliente(models.Model):
         ordering = ['id']
 
     def int(self):
+        return int(self.id)
+
+
+class UserProfile(models.Model):
+    cliente = models.ForeignKey(Cliente, blank=True, null=True,on_delete=models.CASCADE, verbose_name=u'Cliente', help_text="Clientes asociados a este usuario")
+    cliente.contribute_to_class(User, 'cliente')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+
+
+class Proceso(models.Model):
+    documento = models.ForeignKey('server.Documento', on_delete=models.CASCADE, null=False, blank=True)
+    producto = models.ForeignKey('server.Producto', on_delete=models.CASCADE, default=True)
+    cantidad = models.FloatField(null=False, blank=True)
+
+    class Meta:
+        ordering = ['id']
+
+    def __int__(self):
         return int(self.id)
 
 
@@ -41,17 +60,3 @@ class Documento(models.Model):
 
     def __str__(self):
         return str(self.nombre)
-
-
-class Proceso(models.Model):
-    proceso = models.ForeignKey('auth.User', related_name='procesos', on_delete=models.CASCADE, default=True)
-    cliente = models.OneToOneField('server.Cliente', on_delete=models.CASCADE, null=False, blank=True)
-    documento = models.OneToOneField('server.Documento', on_delete=models.CASCADE, null=False, blank=True)
-    producto = models.ForeignKey('server.Producto', on_delete=models.CASCADE, default=True)
-    cantidad = models.FloatField(null=False, blank=True)
-
-    class Meta:
-        ordering = ['id']
-
-    def __int__(self):
-        return int(self.id)

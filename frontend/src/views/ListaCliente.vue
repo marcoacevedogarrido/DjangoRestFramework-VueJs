@@ -3,23 +3,23 @@
     <div class="container">
       <div class='row'>
         <div class="col-md-12 text-left">
-          <h4>Listado de Clientes</h4>
+          <h4>Listado de Documentos</h4>
         </div>
           <div class="col-sm-12 text-center">
             <div class="container">
-              <paginate name="clientes" :list="clientes" :per="5">
+              <paginate name="documentos" :list="documentos" :per="5">
               <div class="row justify-content-center align-items-center">
                 <table id='Table' class="table table-striped table-bordered table-hover text-center">
                     <thead class="thead-dark">
                       <tr>
                         <th>Id</th>
                         <th>Nombre</th>
-                        <th>Razon Social</th>
-                        <th>Rut</th>
+                        <th>Fecha Creacion</th>
+                        <th>Fecha Envio</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(item, x) in clientes" v-bind:key="x">
+                      <tr v-for="(item, x) in documentos" v-bind:key="x">
                         <td>
                           <router-link :to="{path: item.id.toString()}">
                             {{ item.id }}
@@ -29,10 +29,10 @@
                           {{ item.nombre }}
                         </td>
                         <td>
-                          {{ item.razon_social }}
+                          {{ item.fecha_creacion }}
                         </td>
                         <td>
-                          {{ item.rut }}
+                          {{ item.fecha_envio }}
                         </td>
                       </tr>
                     </tbody>
@@ -44,7 +44,6 @@
         </b-container>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -52,24 +51,24 @@
 /* eslint-disable */
 import axios from 'axios'
 
-const Listarpath = 'http://localhost:8000/api/clientes/'
+const Listarpath = 'http://localhost:8000/api/documentos/'
 
 export default {
   components: {},
   data () {
     return {
-      paginate:['clientes'],
+      paginate:['documentos'],
       id: '',
       nombre:'',
-      razon_social:'',
-      rut:'',
-      clientes: []
+      fecha_creacion:'',
+      fecha_envio:'',
+      documentos: []
     }
   },
   methods: {
-    getCliente () {
+    getDocumento () {
       axios.get(Listarpath).then((response) => {
-        this.clientes = response.data
+        this.documentos = response.data
       })
       .catch((error) => {
         console.log(error)
@@ -77,7 +76,7 @@ export default {
     }
   },
   created () {
-    this.getCliente()
+    this.getDocumento()
   }
 }
 </script>

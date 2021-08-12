@@ -10,6 +10,9 @@ class ClienteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+    def create(self, validated_data):
+        return Cliente.objects.create(**validated_data)
+
 class ClienteView(viewsets.ModelViewSet):
     queryset = Cliente.objects.all()
     serializer_class = ClienteSerializer

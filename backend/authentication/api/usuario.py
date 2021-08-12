@@ -19,11 +19,11 @@ from rest_framework.decorators import api_view, permission_classes
 class UserModelSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
     password = serializers.CharField(min_length=3)
-    procesos = serializers.PrimaryKeyRelatedField(many=True, queryset=Proceso.objects.all())
+    clientes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'procesos')
+        fields = ('username', 'password', 'clientes')
         extra_kwargs = {'password': {'write_only': True}}
 
 
